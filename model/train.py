@@ -5,8 +5,8 @@ Dataset : Default of Credit Card Clients (UCI)
 Task    : Binary classification - predict whether a client will default
           on their credit card payment next month.
 
-Stage 2: Adds Logistic Regression and Decision Tree classifiers, each
-wrapped in a preprocessing pipeline, with evaluation metrics.
+Stage 3: Adds K-Nearest Neighbors and Naive Bayes classifiers alongside
+Logistic Regression and Decision Tree.
 """
 
 import os
@@ -23,6 +23,8 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
@@ -60,6 +62,18 @@ def build_pipelines():
         "Decision Tree": Pipeline(
             [
                 ("clf", DecisionTreeClassifier(max_depth=8, random_state=RANDOM_STATE)),
+            ]
+        ),
+        "kNN": Pipeline(
+            [
+                ("scaler", StandardScaler()),
+                ("clf", KNeighborsClassifier(n_neighbors=15)),
+            ]
+        ),
+        "Naive Bayes": Pipeline(
+            [
+                ("scaler", StandardScaler()),
+                ("clf", GaussianNB()),
             ]
         ),
     }
