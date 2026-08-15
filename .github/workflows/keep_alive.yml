@@ -1,0 +1,31 @@
+name: Keep Streamlit App Awake
+
+# Streamlit Community Cloud's free tier puts apps to sleep after a period of
+# inactivity (the app then shows a "Zzzz... this app has gone to sleep" page
+# with a manual "wake up" button). That's a bad look if an evaluator opens
+# your submission link days after you deployed it. This workflow pings the
+# live app on a schedule to keep it warm.
+#
+# Setup (one-time, after you've deployed on Streamlit Cloud):
+#   Repo -> Settings -> Secrets and variables -> Actions -> Variables tab
+#   -> New repository variable
+#   Name:  STREAMLIT_APP_URL
+#   Value: https://your-app-name.streamlit.app
+on:
+  schedule:
+    - cron: "0 6 */3 * *" # every 3 days at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the deployed app
+        run: |
+          if [ -z "${{ vars.STREAMLIT_APP_URL }}" ]; then
+            echo "STREAMLIT_APP_URL repository variable is not set yet - skipping."
+            echo "Set it in Settings > Secrets and variables > Actions > Variables once deployed."
+            exit 0
+          fi
+          echo "Pinging ${{ vars.STREAMLIT_APP_URL }} ..."
+          curl -sS -o /dev/null -w "HTTP status: %{http_code}\n" --max-time 30 "${{ vars.STREAMLIT_APP_URL }}" || true

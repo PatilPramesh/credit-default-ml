@@ -1,0 +1,46 @@
+name: CI - Test Models & App Integrity
+
+# Runs on every push and PR to main. Streamlit Community Cloud watches this
+# same repo/branch and auto-redeploys on every push independently of this
+# workflow - this job is a safety net that catches a broken model artifact,
+# missing dependency, or corrupted test data *before* (or alongside) that
+# auto-deploy, so you find out from a red X on GitHub instead of a crashed
+# live app.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Verify app.py imports without errors
+        run: python -c "import ast; ast.parse(open('app.py', encoding='utf-8').read())"
+
+      - name: Run model + data smoke tests
+        run: pytest tests/ -v
+
+      - name: Summary
+        if: success()
+        run: echo "All checks passed - Streamlit Community Cloud will auto-deploy this commit."

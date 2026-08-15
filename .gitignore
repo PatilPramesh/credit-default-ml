@@ -7,3 +7,6 @@ venv/
 .streamlit/secrets.toml
 .DS_Store
 .commit_stages/
+daily-commits/
+.pytest_cache/
+tests/__pycache__/
