@@ -109,7 +109,7 @@ Then upload `test_data.csv` in the app's sidebar and select a model from the dro
 
 ## Live Streamlit App
 
-> **`<PASTE YOUR DEPLOYED STREAMLIT APP LINK HERE>`**
+> **https://credit-default-ml-bits-pramesh-patil.streamlit.app**
 
 ### Deployment Notes
 
