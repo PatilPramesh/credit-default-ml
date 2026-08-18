@@ -116,7 +116,3 @@ Then upload `test_data.csv` in the app's sidebar and select a model from the dro
 - Streamlit Community Cloud does **not** read `runtime.txt` for Python version selection — set the Python version explicitly via **Advanced settings** during deploy (Python 3.11 or 3.12 recommended) or from the app's **Settings** afterward.
 - `requirements.txt` uses minimum-version pins (`>=`) rather than exact pins, so pip can resolve wheels that are actually compatible with whatever Python version Cloud provisions — this avoids the "missing/incompatible dependency" deployment failures the assignment warns about.
 - Model files are committed directly to `model/` so the app loads pre-trained pipelines instantly instead of retraining on every run (faster cold start on the free tier).
-
-## BITS Virtual Lab Execution
-
-> Screenshot of this assignment being executed on BITS Virtual Lab is included in the submitted PDF. `model/train_and_evaluate.ipynb` was executed end-to-end with no errors and is a good candidate to run/screenshot on the lab.
